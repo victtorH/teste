@@ -8,7 +8,7 @@
     <!-- Tipografia -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -41,11 +41,14 @@
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                         serif: ['Playfair Display', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
                     },
                     boxShadow: {
                         'premium': '0 20px 40px -15px rgba(208, 96, 71, 0.15)',
                         'card': '0 10px 30px -10px rgba(44, 44, 44, 0.05)',
-                        'inner-clay': 'inset 2px 4px 10px rgba(0,0,0,0.03)'
+                        'inner-clay': 'inset 2px 4px 10px rgba(0,0,0,0.03)',
+                        'glow-bronze': '0 0 15px rgba(166, 93, 70, 0.4)',
+                        'glow-terracotta': '0 0 20px rgba(208, 96, 71, 0.5)'
                     }
                 }
             }
@@ -95,6 +98,13 @@
             display: none;
         }
 
+        /* Malha Estrutural (Grid de Engenharia) para a Hero */
+        .bg-grid-pattern {
+            background-image: linear-gradient(to right, rgba(26, 26, 26, 0.04) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(26, 26, 26, 0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
         /* Arte abstrata fluida da Secção 1 */
         .clay-art-container { position: relative; display: flex; justify-content: center; align-items: center; }
         .clay-shape {
@@ -111,64 +121,82 @@
         }
 
         /* ==========================================================
-           GRÁFICO ISOMÉTRICO 3D (O "VIDRO" DA REFERÊNCIA)
+           ENGENHARIA CSS: ANEL DE COMPILAÇÃO (MOTOR DE RENDERIZAÇÃO)
            ========================================================== */
-        .isometric-container {
-            perspective: 1000px;
-            transform-style: preserve-3d;
-        }
-
-        .isometric-chart {
-            width: 180px; 
-            height: 180px;
-            border-radius: 50%;
-            transform: rotateX(60deg) rotateZ(45deg); 
-            background: rgba(255, 255, 255, 0.25);
-            border: 2px solid rgba(255, 255, 255, 0.7);
-            box-shadow: 
-                inset 0 0 15px rgba(255,255,255,0.6),
-                -6px 10px 0px rgba(232, 229, 223, 0.8),
-                -10px 15px 30px rgba(0,0,0,0.08);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+        .compilation-ring-wrapper {
             position: relative;
-            transition: border-color 1s ease, box-shadow 1s ease, width 0.5s ease, height 0.5s ease;
+            width: 280px;
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
         }
 
-        .isometric-chart.is-completed {
-            border-color: rgba(208, 96, 71, 0.8);
-            box-shadow: 
-                inset 0 0 35px rgba(208, 96, 71, 0.3),
-                -10px 15px 0px rgba(232, 229, 223, 0.8),
-                -15px 25px 50px rgba(208, 96, 71, 0.3);
-        }
-
-        .chart-svg {
+        .compilation-svg {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             transform: rotate(-90deg); 
             overflow: visible;
         }
 
-        /* Holograma 2D Plano: Badge flutuante acima do gráfico */
+        .compilation-track {
+            stroke: rgba(44, 44, 44, 0.06);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .compilation-progress {
+            stroke: #D06047;
+            stroke-width: 4;
+            fill: none;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 6px rgba(208, 96, 71, 0.4));
+            transition: stroke-dashoffset 0.1s, stroke 0.4s, filter 0.4s;
+        }
+
+        /* Estado de Tensão: Aguardando Decisão (O Incómodo Visual) */
+        .awaiting-input .compilation-progress {
+            stroke: #A65D46; /* Bronze */
+            animation: pulse-tension 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse-tension {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(166, 93, 70, 0.7)); opacity: 1; }
+            50% { filter: drop-shadow(0 0 2px rgba(166, 93, 70, 0.2)); opacity: 0.7; }
+        }
+
+        /* Elemento de precisão CAD no centro do anel */
+        .compilation-crosshair {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        /* Holograma 2D Plano: Badge de Terminal Status */
         #chart-status-badge {
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            animation: float-badge 4s ease-in-out infinite;
         }
+        
+        #chart-status-badge.tension-state {
+            border-color: rgba(166, 93, 70, 0.4);
+            background-color: rgba(166, 93, 70, 0.05);
+        }
+
         #chart-status-badge.completed {
             background-color: #D06047;
-            color: #FAF9F6;
             border-color: #D06047;
             box-shadow: 0 12px 25px -5px rgba(208, 96, 71, 0.4);
         }
 
         #chart-status-badge.completed span {
             color: #FAF9F6 !important;
-        }
-
-        @keyframes float-badge {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
         }
 
         /* ==========================================================
@@ -184,54 +212,58 @@
                 backdrop-filter: blur(16px);
                 -webkit-backdrop-filter: blur(16px);
                 border-bottom: 1px solid rgba(44, 44, 44, 0.08);
-                padding: 10px 16px;
+                padding: 10px 24px;
                 z-index: 40; 
                 box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
-                height: 96px; 
+                height: 84px; 
                 animation: slideHUDIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
                 display: flex !important;
-                flex-direction: row !important;
                 align-items: center;
-                justify-content: space-evenly;
             }
 
             .mobile-hud-active .graphic-wrapper {
-                flex-direction: row !important;
-                justify-content: space-around;
-                align-items: center;
                 width: 100%;
                 height: 100%;
                 padding: 0 !important;
+                display: flex;
+                align-items: center;
+                flex-direction: row !important;
             }
 
-            .mobile-hud-active .isometric-chart {
-                width: 60px !important;
-                height: 60px !important;
-                transform: rotateX(50deg) rotateZ(45deg);
-                box-shadow: inset 0 0 10px rgba(255,255,255,0.6), -4px 6px 0px rgba(232, 229, 223, 0.8), -6px 10px 15px rgba(0,0,0,0.05);
+            .mobile-hud-active .hud-header {
+                display: none !important;
+            }
+
+            .mobile-hud-active .hud-inner {
+                flex-direction: row-reverse !important; 
+                justify-content: space-between !important;
+                align-items: center !important;
+                width: 100%;
+                gap: 16px;
+            }
+
+            .mobile-hud-active .compilation-ring-wrapper {
+                width: 54px !important;
+                height: 54px !important;
+                flex-shrink: 0;
             }
 
             .mobile-hud-active #chart-status-badge {
                 margin-bottom: 0 !important;
-                font-size: 10px !important;
-                padding: 6px 12px !important;
+                padding: 10px 14px !important;
+                width: 100% !important;
+                font-size: 11px !important;
+                flex-grow: 1; 
             }
 
             .process-timeline {
-                padding-top: 120px;
+                padding-top: 100px;
             }
         }
 
         @keyframes slideHUDIn {
             from { transform: translateY(-100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
-        }
-
-        @media (min-width: 1024px) {
-            .isometric-chart {
-                width: 280px;
-                height: 280px;
-            }
         }
     </style>
 </head>
@@ -253,30 +285,22 @@
         </div>
     </header>
 
-    <!-- ==========================================================
-       NOVA NAVEGAÇÃO INFERIOR PARA TELEMÓVEIS (UX ergonómica sem hambúrguer)
-       ========================================================== -->
+    <!-- NAVEGAÇÃO INFERIOR PARA TELEMÓVEIS -->
     <nav class="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-brand-clay/95 backdrop-blur-md border-t border-text-graphite/10 py-3.5 px-6 flex justify-around items-center shadow-[0_-5px_20px_rgba(0,0,0,0.03)]">
-        <!-- Botão 1: Essência / Metodologia -->
         <a href="#sobre" class="flex flex-col items-center gap-1 group text-text-matte hover:text-accent-terracotta transition-colors">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <!-- Ícone geométrico abstrato representativo (Metáfora de Galeria/Vaso) -->
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
             </svg>
         </a>
 
-        <!-- Botão 2: O Processo -->
         <a href="#processo" class="flex flex-col items-center gap-1 group text-text-matte hover:text-accent-terracotta transition-colors">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <!-- Ícone representativo de ciclo/fases e progresso -->
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
             </svg>
         </a>
 
-        <!-- Botão 3: Diagnóstico / Contacto -->
         <a href="#cta" class="flex flex-col items-center gap-1 group text-text-matte hover:text-accent-terracotta transition-colors">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <!-- Ícone representativo de diagnóstico, dados e contacto -->
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
             </svg>
         </a>
@@ -286,6 +310,8 @@
         
         <!-- Secção 1: Hero -->
         <section id="hero" class="min-h-screen flex items-center pt-28 pb-12 lg:pt-0 lg:pb-0 relative overflow-hidden">
+            <div class="absolute inset-0 bg-brand-alabaster -z-20"></div>
+            <div class="absolute inset-0 bg-grid-pattern -z-10" style="mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);"></div>
             <div class="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-brand-alabaster opacity-70 blur-3xl -z-10"></div>
             
             <div class="lg:col-span-6 flex flex-col justify-center relative z-10 hero-text-col w-full">
@@ -293,7 +319,7 @@
                     <div class="lg:col-span-6 flex flex-col justify-center relative z-10 text-left">
                         <div class="flex items-center gap-3 mb-6 reveal-item">
                             <span class="w-8 h-[1px] bg-accent-terracotta"></span>
-                            <span class="text-xs font-semibold tracking-[0.2em] text-text-matte uppercase">Artesanato Digital & SLA</span>
+                            <span class="text-[10px] md:text-xs font-medium tracking-[0.2em] text-text-matte uppercase font-mono">Artesanato Digital & SLA</span>
                         </div>
                         
                         <h1 class="font-serif text-3xl sm:text-5xl lg:text-6xl text-text-onyx leading-[1.1] mb-6 reveal-item">
@@ -306,39 +332,55 @@
                         
                         <div class="flex flex-col sm:flex-row gap-5 items-start sm:items-center reveal-item w-full">
                             <a href="#cta" class="w-full sm:w-auto group relative inline-flex items-center justify-center px-8 py-4 text-sm font-medium tracking-wide text-brand-clay bg-accent-terracotta overflow-hidden rounded-sm shadow-premium transition-all hover:bg-accent-copper hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent-terracotta focus:ring-offset-2 focus:ring-offset-brand-clay">
-                                <span class="relative z-10 flex items-center justify-center gap-2">
+                                <span class="relative z-10 flex items-center justify-center gap-2 font-sans">
                                     Discutir Estratégia
                                     <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                 </span>
                             </a>
                             
-                            <span class="text-xs font-light text-text-matte tracking-wide self-center">
-                                SLA de Elite • Sob Demanda
-                            </span>
+                            <!-- Indicador de Status "Ao Vivo" + Tipografia Monospace -->
+                            <div class="flex items-center gap-2 text-xs text-text-matte font-mono tracking-wider self-center ml-1 sm:ml-4">
+                                <span class="relative flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                </span>
+                                SLA de Elite • Online
+                            </div>
                         </div>
                         
                         <div class="mt-16 pt-8 border-t border-text-graphite/10 flex gap-8 reveal-item justify-start">
                             <div>
-                                <p class="text-2xl sm:text-3xl font-sans font-light tracking-tight text-text-onyx mb-1">99.9%</p>
-                                <p class="text-[10px] sm:text-xs text-text-matte tracking-wider uppercase font-medium">Uptime Garantido</p>
+                                <p class="text-2xl sm:text-3xl font-mono font-medium tracking-tight text-text-onyx mb-1">99.9%</p>
+                                <p class="text-[10px] sm:text-[11px] text-text-matte tracking-widest uppercase font-mono">Uptime Garantido</p>
                             </div>
                             <div>
-                                <p class="text-2xl sm:text-3xl font-sans font-light tracking-tight text-text-onyx mb-1">&lt;1s</p>
-                                <p class="text-[10px] sm:text-xs text-text-matte tracking-wider uppercase font-medium">Carregamento</p>
+                                <p class="text-2xl sm:text-3xl font-mono font-medium tracking-tight text-text-onyx mb-1">&lt;1s</p>
+                                <p class="text-[10px] sm:text-[11px] text-text-matte tracking-widest uppercase font-mono">Carregamento</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="lg:col-span-6 h-[40vh] sm:h-[50vh] lg:h-[80vh] flex items-center justify-center relative hero-visual-col reveal-element w-full">
                         <div class="clay-art-container w-full h-full relative">
-                            <div class="clay-shape z-10"></div>
+                            <div class="clay-shape z-10 relative"></div>
                             
-                            <div class="absolute w-[80%] h-[1px] bg-text-graphite/10 top-1/3 left-0 -z-0 rotate-[-15deg]"></div>
-                            <div class="absolute w-[1px] h-[80%] bg-text-graphite/10 right-1/4 top-0 -z-0 rotate-[-15deg]"></div>
+                            <div class="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+                                <div class="absolute w-[200vw] h-[1px] bg-text-graphite/10 top-1/2 right-[50%]"></div>
+                                <div class="absolute w-[1px] h-[150vh] bg-text-graphite/10 left-1/2 top-[-25%]"></div>
+                                
+                                <div class="absolute w-[260px] sm:w-[400px] h-[300px] sm:h-[460px] border border-text-graphite/5 flex items-center justify-center">
+                                    <div class="absolute -top-2 -left-2 text-text-graphite/30 text-[10px] font-mono leading-none">+</div>
+                                    <div class="absolute -top-2 -right-2 text-text-graphite/30 text-[10px] font-mono leading-none">+</div>
+                                    <div class="absolute -bottom-2 -left-2 text-text-graphite/30 text-[10px] font-mono leading-none">+</div>
+                                    <div class="absolute -bottom-2 -right-2 text-text-graphite/30 text-[10px] font-mono leading-none">+</div>
+                                </div>
+                                
+                                <div class="absolute w-[280px] sm:w-[440px] h-[280px] sm:h-[440px] rounded-full border border-dashed border-text-graphite/10 animate-[spin_60s_linear_infinite]"></div>
+                            </div>
                             
                             <div class="absolute bottom-10 right-0 bg-brand-alabaster/80 backdrop-blur-md p-4 shadow-xl text-xs flex gap-4 items-center z-20 rounded-sm border border-text-graphite/5">
                                 <div class="w-2 h-2 rounded-full bg-accent-terracotta animate-pulse"></div>
-                                <span class="font-medium text-text-graphite uppercase tracking-widest text-[10px] sm:text-xs">Digital-Art On</span>
+                                <span class="font-medium text-text-graphite uppercase tracking-widest text-[10px] sm:text-xs font-mono">Digital-Art On</span>
                             </div>
                         </div>
                     </div>
@@ -347,98 +389,142 @@
         </section>
 
         <!-- Secção 2: Sobre Nós -->
-        <section id="sobre" class="py-20 sm:py-32 lg:py-48 bg-brand-alabaster relative z-20 border-t border-text-graphite/5 overflow-hidden">
+        <section id="sobre" class="py-20 sm:py-32 lg:py-48 bg-brand-alabaster relative z-20 overflow-hidden">
             <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full">
                 
                 <div class="max-w-4xl mb-16 sm:mb-24 scroll-reveal">
                     <div class="flex items-center gap-4 mb-6 sm:mb-8">
                         <span class="w-12 h-[1px] bg-accent-terracotta"></span>
-                        <span class="text-xs font-semibold tracking-[0.2em] text-text-matte uppercase">A Nossa Tese</span>
+                        <span class="text-xs font-semibold tracking-[0.2em] text-text-matte uppercase font-mono">A Nossa Tese</span>
                     </div>
                     
                     <h2 class="font-serif text-3xl sm:text-5xl lg:text-6xl text-text-onyx leading-[1.15] tracking-tight">
-                        Um produto físico excepcional <span class="text-accent-terracotta italic font-light">perde o seu valor</span> em uma vitrine genérica.
+                        Um produto físico excecional <span class="text-accent-terracotta italic font-light">perde o seu valor</span> em uma vitrine genérica.
                     </h2>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16 border-t border-text-graphite/10 pt-12 sm:pt-16">
-                    <div class="scroll-reveal group">
-                        <h3 class="font-sans text-xl sm:text-2xl font-semibold tracking-tight text-text-onyx mb-4 transition-colors duration-300 group-hover:text-accent-terracotta">O Antagonista</h3>
-                        <p class="font-sans text-base text-text-matte font-light leading-relaxed">
-                            A comoditização digital destrói a perceção de valor. Templates de prateleira e marketing desconectado da engenharia de software corroem a sua margem e banalizam o seu esforço físico.
-                        </p>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 pt-4">
+                    <!-- Card 1: O Antagonista -->
+                    <div class="scroll-reveal group relative p-8 sm:p-10 border border-dashed border-text-graphite/20 bg-text-graphite/[0.02] flex flex-col gap-6 rounded-sm">
+                        <div class="h-28 w-full border border-text-graphite/10 bg-brand-clay/50 flex flex-col gap-3 p-4 opacity-50 rounded-sm">
+                            <div class="h-2 w-full bg-text-graphite/10 rounded-sm"></div>
+                            <div class="h-2 w-3/4 bg-text-graphite/10 rounded-sm"></div>
+                            <div class="flex gap-2 mt-auto">
+                                <div class="h-8 w-8 border border-dashed border-text-graphite/20 rounded-sm"></div>
+                                <div class="h-8 w-full border border-text-graphite/10 bg-text-graphite/5 rounded-sm"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-mono text-lg font-medium tracking-tight text-text-onyx mb-3 opacity-60">O Antagonista</h3>
+                            <p class="font-sans text-sm sm:text-base text-text-matte font-light leading-relaxed opacity-70">
+                                A comoditização digital destrói a perceção de valor. Templates de prateleira e marketing desconectado da engenharia de software corroem a sua margem de lucro.
+                            </p>
+                        </div>
                     </div>
 
-                    <div class="scroll-reveal group">
-                        <h3 class="font-sans text-xl sm:text-2xl font-semibold tracking-tight text-text-onyx mb-4 flex items-center gap-3 transition-colors duration-300 group-hover:text-accent-terracotta">
-                            A Arte 
-                            <span class="text-[9px] font-medium text-text-matte normal-case tracking-wider border border-text-graphite/20 rounded-full px-2.5 py-1">O Desejo</span>
-                        </h3>
-                        <p class="font-sans text-base text-text-matte font-light leading-relaxed">
-                            Nossa parceria em Digital-Art captura a atenção e cria um desejo irrefreável nas redes sociais, elevando a estética da sua marca ao patamar de uma verdadeira galeria de alto padrão.
-                        </p>
+                    <!-- Card 2: A Arte -->
+                    <div class="scroll-reveal group relative p-8 sm:p-10 bg-white shadow-card hover:shadow-premium transition-all duration-500 border border-text-graphite/5 rounded-sm flex flex-col gap-6 transform hover:-translate-y-1">
+                        <div class="h-28 w-full relative overflow-hidden bg-brand-alabaster rounded-sm flex items-end justify-center border border-text-graphite/5">
+                            <div class="absolute inset-0 bg-grid-pattern opacity-10 z-0"></div>
+                            <div class="relative w-full h-full flex flex-col items-center justify-end z-10">
+                                <div class="absolute bottom-[-15px] w-[115%] h-[80%] bg-gradient-to-t from-[#DCD9D0] via-[#E8E5DF] to-[#FAF9F6] rounded-[50%_50%_0_0_/_100%_100%_0_0] shadow-[inset_0_15px_25px_rgba(255,255,255,0.9),_0_-5px_20px_rgba(0,0,0,0.06)] transition-all duration-700 ease-out group-hover:h-[85%]"></div>
+                                <div class="absolute bottom-[65%] w-[90%] h-6 sm:h-8 bg-gradient-to-b from-[#FAF9F6] to-[#E8E5DF] rounded-[50%] shadow-[0_5px_15px_rgba(0,0,0,0.08),_inset_0_-2px_5px_rgba(255,255,255,1)] flex items-center justify-center transition-all duration-700 ease-out group-hover:bottom-[70%] group-hover:w-[95%] border border-[#FAF9F6]">
+                                    <div class="w-[85%] h-3 sm:h-4 bg-[#DCD9D0]/50 rounded-[50%] shadow-[inset_0_3px_5px_rgba(0,0,0,0.15)] flex items-center justify-center">
+                                        <div class="w-[60%] h-1 bg-text-graphite/5 rounded-full"></div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-0 w-px h-full bg-text-graphite/10 z-20"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-sans text-xl font-semibold tracking-tight text-text-onyx mb-3 flex items-center gap-3 transition-colors duration-300 group-hover:text-accent-terracotta">
+                                A Arte 
+                                <span class="text-[9px] font-medium text-text-matte normal-case tracking-wider border border-text-graphite/20 rounded-full px-2.5 py-1">O Desejo</span>
+                            </h3>
+                            <p class="font-sans text-sm sm:text-base text-text-matte font-light leading-relaxed">
+                                Nossa parceria em Digital-Art captura a atenção e cria um desejo irrefreável nas redes sociais, elevando a estética da sua marca ao patamar de uma verdadeira galeria de alto padrão.
+                            </p>
+                        </div>
                     </div>
 
-                    <div class="scroll-reveal group">
-                        <h3 class="font-sans text-xl sm:text-2xl font-semibold tracking-tight text-text-onyx mb-4 flex items-center gap-3 transition-colors duration-300 group-hover:text-accent-terracotta">
-                            A Engenharia 
-                            <span class="text-[9px] font-medium text-accent-terracotta normal-case tracking-wider border border-accent-terracotta/30 bg-accent-terracotta/5 rounded-full px-2.5 py-1">A Conversão</span>
-                        </h3>
-                        <p class="font-sans text-base text-text-matte font-light leading-relaxed">
-                            O antídoto final. Garantimos que o tráfego pouse em uma infraestrutura contínua, veloz e robusta. Sem quebras de expectativa na jornada de compra, focada puramente em lucrar.
-                        </p>
+                    <!-- Card 3: A Engenharia -->
+                    <div class="scroll-reveal group relative p-8 sm:p-10 bg-white shadow-card hover:shadow-premium transition-all duration-500 border border-text-graphite/5 rounded-sm flex flex-col gap-6 transform hover:-translate-y-1">
+                        <div class="h-28 w-full relative bg-brand-alabaster rounded-sm flex flex-col justify-end p-4 border border-text-graphite/5 overflow-hidden">
+                            <div class="absolute top-3 left-4 text-[10px] font-mono font-medium text-accent-terracotta tracking-widest uppercase">Performance</div>
+                            <svg class="w-full h-12 text-accent-terracotta overflow-visible opacity-80" viewBox="0 0 100 30" fill="none" stroke="currentColor" preserveAspectRatio="none">
+                                <path d="M0,30 L20,20 L40,25 L60,10 L80,15 L100,0" stroke-width="1.5" vector-effect="non-scaling-stroke"></path>
+                                <circle cx="100" cy="0" r="3" fill="currentColor" class="animate-pulse"></circle>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-sans text-xl font-semibold tracking-tight text-text-onyx mb-3 flex items-center gap-3 transition-colors duration-300 group-hover:text-accent-terracotta">
+                                A Engenharia 
+                                <span class="text-[9px] font-medium text-accent-terracotta normal-case tracking-wider border border-accent-terracotta/30 bg-accent-terracotta/5 rounded-full px-2.5 py-1">A Conversão</span>
+                            </h3>
+                            <p class="font-sans text-sm sm:text-base text-text-matte font-light leading-relaxed">
+                                O antídoto final. Garantimos que o tráfego pouse numa infraestrutura contínua, veloz e robusta. Sem quebras de expectativa na jornada focada em lucrar.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Secção 3: O Processo & Diagnóstico (Sticky integrado com HUD Telemóvel) -->
+        <!-- Secção 3 e 4: O Processo & CTA (Unificação Estética Orientada ao Scroll) -->
         <section id="processo" class="py-20 sm:py-32 lg:py-48 bg-brand-clay relative z-10 border-t border-text-graphite/5">
             <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full">
                 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 relative">
                     
-                    <!-- Coluna da Esquerda: Gráfico Mestre Unificado (Sticky no Desktop, HUD flutuante no Telemóvel) -->
+                    <!-- Coluna da Esquerda: Motor de Renderização (Sticky / HUD) -->
                     <div id="sticky-graphic-col" class="lg:col-span-5 lg:sticky lg:top-[72px] lg:h-fit z-20 transition-all duration-350">
                         <div class="graphic-wrapper flex flex-col items-center lg:items-start w-full py-4 lg:py-8">
                             
-                            <!-- Header Fixo da Jornada (Apenas em ecrãs de Desktop) -->
+                            <!-- Header Fixo da Jornada -->
                             <div class="hidden lg:flex flex-col mb-12">
                                 <div class="flex items-center gap-4 mb-4 scroll-reveal">
                                     <span class="w-8 h-[1px] bg-accent-terracotta"></span>
-                                    <span class="text-xs font-semibold tracking-[0.2em] text-text-matte uppercase">A Arquitetura</span>
+                                    <span class="text-xs font-semibold tracking-[0.2em] text-text-matte uppercase font-mono">A Arquitetura</span>
                                 </div>
                                 <h2 class="font-serif text-3xl text-text-onyx leading-tight">
                                     A rota exata de uma operação <span class="text-accent-terracotta italic font-light">End-to-End.</span>
                                 </h2>
                             </div>
 
-                            <!-- Display de Status flutuante (2D) e Gráfico (3D) -->
-                            <div class="relative flex flex-col items-center lg:items-start justify-center">
+                            <!-- Display de Terminal (HUD) e Anel de Compilação -->
+                            <div class="hud-inner relative flex flex-col items-center lg:items-start justify-center w-full">
                                 
-                                <!-- Status Badge (HUD horizontal que flutua de forma plana) -->
-                                <div id="chart-status-badge" class="mb-6 lg:mb-8 bg-brand-alabaster px-5 py-2 shadow-card rounded-sm border border-text-graphite/10 text-[10px] font-bold tracking-widest text-text-onyx uppercase whitespace-nowrap self-center lg:self-start">
-                                    Status: <span id="chart-percentage-text" class="text-accent-terracotta">0%</span>
+                                <!-- Status Badge (Interface de Terminal Monospace) -->
+                                <div class="hud-header flex items-center gap-2 mb-3 lg:self-start w-full max-w-[280px]">
+                                    <div class="w-2 h-2 bg-accent-terracotta rounded-full animate-pulse"></div>
+                                    <span class="font-mono text-[10px] uppercase tracking-widest text-text-matte">Motor de Renderização</span>
+                                </div>
+                                <div id="chart-status-badge" class="mb-8 w-full max-w-[280px] bg-brand-alabaster px-4 py-3 shadow-card rounded-sm border border-text-graphite/10 flex justify-between items-center text-xs lg:text-sm font-mono tracking-tight text-text-onyx transition-colors duration-300">
+                                    <span class="opacity-70">Status:</span> 
+                                    <span id="chart-percentage-text" class="text-accent-terracotta font-medium transition-colors duration-300">Aguardando...</span>
                                 </div>
 
-                                <!-- Gráfico de Vidro 3D Isométrico -->
-                                <div class="isometric-container">
-                                    <div id="master-chart" class="isometric-chart mx-auto">
-                                        <svg viewBox="0 0 100 100" class="chart-svg">
-                                            <line x1="50" y1="50" x2="50" y2="0" stroke="rgba(255,255,255,0.7)" stroke-width="0.5" />
-                                            <line x1="50" y1="50" x2="100" y2="50" stroke="rgba(255,255,255,0.7)" stroke-width="0.5" />
-                                            <line x1="50" y1="50" x2="50" y2="100" stroke="rgba(255,255,255,0.7)" stroke-width="0.5" />
-                                            <line x1="50" y1="50" x2="0" y2="50" stroke="rgba(255,255,255,0.7)" stroke-width="0.5" />
-                                            <circle id="chart-fill" cx="50" cy="50" r="25" fill="none" stroke="#D06047" stroke-width="50" stroke-dasharray="157.1" stroke-dashoffset="157.1" opacity="0.95" />
-                                        </svg>
+                                <!-- O Anel de Compilação Minimalista -->
+                                <div id="master-chart" class="compilation-ring-wrapper mx-auto lg:mx-0">
+                                    <!-- Crosshair de Precisão (CAD) -->
+                                    <div class="compilation-crosshair">
+                                        <div class="w-[120%] h-[1px] bg-text-graphite absolute"></div>
+                                        <div class="w-[1px] h-[120%] bg-text-graphite absolute"></div>
+                                        <div class="w-12 h-12 border border-text-graphite rounded-full absolute"></div>
+                                        <div class="w-1.5 h-1.5 border border-text-graphite rounded-full absolute"></div>
                                     </div>
+                                    <!-- Progress Ring SVG -->
+                                    <svg viewBox="0 0 100 100" class="compilation-svg">
+                                        <circle class="compilation-track" cx="50" cy="50" r="46" />
+                                        <circle id="chart-fill" class="compilation-progress" cx="50" cy="50" r="46" stroke-dasharray="289.026" stroke-dashoffset="289.026" />
+                                    </svg>
                                 </div>
                             </div>
                             
                         </div>
                     </div>
 
-                    <!-- Coluna da Direita: Conteúdo de Leitura Confortável (Ciclos + Form) -->
+                    <!-- Coluna da Direita: Conteúdo de Leitura & O Gatilho Final (Formulário) -->
                     <div class="lg:col-span-7 flex flex-col gap-24 lg:gap-32 w-full">
                         
                         <!-- Timeline (Ciclo 01 ao Ciclo 04) -->
@@ -447,13 +533,13 @@
                             <!-- Ciclo 1 -->
                             <div class="process-step cycle-step relative pl-8 md:pl-16 process-line group">
                                 <div class="absolute left-[-5px] top-2 w-3 h-3 rounded-full bg-brand-clay border-2 border-text-graphite/20 transition-all duration-300 group-hover:border-accent-terracotta group-hover:bg-accent-terracotta"></div>
-                                <span class="text-accent-terracotta/80 font-sans text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase block mb-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent-terracotta">Ciclo 01</span>
+                                <span class="text-accent-terracotta/80 font-sans text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase block mb-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent-terracotta font-mono">Ciclo 01</span>
                                 <h3 class="font-sans text-xl md:text-2xl font-semibold text-text-onyx mb-3">Imersão e Diagnóstico</h3>
                                 <p class="font-sans text-base text-text-matte font-light leading-relaxed mb-6">Não começamos pelo código, começamos pelo seu negócio. Mergulhamos na essência do seu produto físico para entender o que o torna único, traduzindo o seu diferencial do mundo real para o ambiente digital.</p>
                                 <div class="bg-brand-alabaster p-6 rounded-sm shadow-card border-l-2 border-accent-terracotta/50 group-hover:border-accent-terracotta transition-colors duration-300">
                                     <div class="flex items-center gap-2 mb-2">
                                         <svg class="w-4 h-4 text-text-matte" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                                        <span class="text-[9px] font-bold tracking-widest text-text-onyx uppercase">Dado de Mercado • McKinsey & Company</span>
+                                        <span class="text-[9px] font-bold tracking-widest text-text-onyx uppercase font-mono">McKinsey & Company</span>
                                     </div>
                                     <p class="text-xs sm:text-sm text-text-matte font-medium italic">"Empresas que integram o design de forma estratégica ao modelo de negócios geram 32% mais receita."</p>
                                 </div>
@@ -462,13 +548,13 @@
                             <!-- Ciclo 2 -->
                             <div class="process-step cycle-step relative pl-8 md:pl-16 process-line group">
                                 <div class="absolute left-[-5px] top-2 w-3 h-3 rounded-full bg-brand-clay border-2 border-text-graphite/20 transition-all duration-300 group-hover:border-accent-terracotta group-hover:bg-accent-terracotta"></div>
-                                <span class="text-accent-terracotta/80 font-sans text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase block mb-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent-terracotta">Ciclo 02</span>
+                                <span class="text-accent-terracotta/80 font-sans text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase block mb-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent-terracotta font-mono">Ciclo 02</span>
                                 <h3 class="font-sans text-xl md:text-2xl font-semibold text-text-onyx mb-3">Arquitetura de Comportamento</h3>
                                 <p class="font-sans text-base text-text-matte font-light leading-relaxed mb-6">Quem compra o seu produto não quer apenas um item, quer uma experiência. Analisamos o comportamento de compra do seu cliente ideal para desenhar uma vitrine que fale diretamente com os desejos dele, eliminando barreiras de compra.</p>
                                 <div class="bg-brand-alabaster p-6 rounded-sm shadow-card border-l-2 border-accent-terracotta/50 group-hover:border-accent-terracotta transition-colors duration-300">
                                     <div class="flex items-center gap-2 mb-2">
                                         <svg class="w-4 h-4 text-text-matte" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                                        <span class="text-[9px] font-bold tracking-widest text-text-onyx uppercase">Dado de Mercado • Epsilon</span>
+                                        <span class="text-[9px] font-bold tracking-widest text-text-onyx uppercase font-mono">Epsilon</span>
                                     </div>
                                     <p class="text-xs sm:text-sm text-text-matte font-medium italic">"80% dos consumidores têm maior probabilidade de fechar uma compra quando a marca oferece uma experiência personalizada."</p>
                                 </div>
@@ -477,22 +563,22 @@
                             <!-- Ciclo 3 -->
                             <div class="process-step cycle-step relative pl-8 md:pl-16 process-line group">
                                 <div class="absolute left-[-5px] top-2 w-3 h-3 rounded-full bg-brand-clay border-2 border-text-graphite/20 transition-all duration-300 group-hover:border-accent-terracotta group-hover:bg-accent-terracotta"></div>
-                                <span class="text-accent-terracotta/80 font-sans text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase block mb-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent-terracotta">Ciclo 03</span>
+                                <span class="text-accent-terracotta/80 font-sans text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase block mb-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent-terracotta font-mono">Ciclo 03</span>
                                 <h3 class="font-sans text-xl md:text-2xl font-semibold text-text-onyx mb-3">Engenharia de Conversão</h3>
                                 <p class="font-sans text-base text-text-matte font-light leading-relaxed mb-6">Estética sem resultado é apenas arte. Nós desenhamos cada etapa da jornada do usuário focados em métricas de negócios: reduzir o abandono de carrinho, aumentar o ticket médio e diminuir o Custo de Aquisição de Clientes (CAC).</p>
                                 <div class="bg-brand-alabaster p-6 rounded-sm shadow-card border-l-2 border-accent-terracotta/50 group-hover:border-accent-terracotta transition-colors duration-300">
                                     <div class="flex items-center gap-2 mb-2">
                                         <svg class="w-4 h-4 text-text-matte" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                                        <span class="text-[9px] font-bold tracking-widest text-text-onyx uppercase">Dado de Mercado • Baymard Institute</span>
+                                        <span class="text-[9px] font-bold tracking-widest text-text-onyx uppercase font-mono">Baymard Institute</span>
                                     </div>
                                     <p class="text-xs sm:text-sm text-text-matte font-medium italic">"A taxa média de abandono de carrinho no e-commerce é de colossais 70,19%."</p>
                                 </div>
                             </div>
 
                             <!-- Ciclo 4 -->
-                            <div class="process-step cycle-step relative pl-8 md:pl-16 process-line group pb-10">
+                            <div class="process-step cycle-step relative pl-8 md:pl-16 process-line group">
                                 <div class="absolute left-[-5px] top-2 w-3 h-3 rounded-full bg-brand-clay border-2 border-text-graphite/20 transition-all duration-300 group-hover:border-accent-terracotta group-hover:bg-accent-terracotta"></div>
-                                <span class="text-accent-terracotta/80 font-sans text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase block mb-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent-terracotta">Ciclo 04</span>
+                                <span class="text-accent-terracotta/80 font-sans text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase block mb-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent-terracotta font-mono">Ciclo 04</span>
                                 <h3 class="font-sans text-xl md:text-2xl font-semibold text-text-onyx mb-3">A Plataforma Viva</h3>
                                 <p class="font-sans text-base text-text-matte font-light leading-relaxed mb-6">
                                     A sua loja física não para no tempo, a sua loja digital também não pode parar. Entregamos uma UX de precisão cirúrgica, hospedada em uma infraestrutura que evolui junto com as demandas da sua marca.
@@ -500,7 +586,7 @@
                                 <div class="bg-brand-alabaster p-6 rounded-sm shadow-card border-l-2 border-accent-terracotta/50 group-hover:border-accent-terracotta transition-colors duration-300">
                                     <div class="flex items-center gap-2 mb-2">
                                         <svg class="w-4 h-4 text-text-matte" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                                        <span class="text-[10px] font-bold tracking-widest text-text-onyx uppercase">Dado de Mercado • Google & Deloitte</span>
+                                        <span class="text-[10px] font-bold tracking-widest text-text-onyx uppercase font-mono">Google & Deloitte</span>
                                     </div>
                                     <p class="text-xs sm:text-sm text-text-matte font-medium italic">"A melhoria de apenas 0.1s no tempo de carregamento no mobile aumenta as conversões em 8,4%."</p>
                                 </div>
@@ -508,51 +594,48 @@
 
                         </div>
 
-                        <!-- O Clímax: Formulário de Conversão -->
-                        <div id="cta" class="pt-16 border-t border-text-graphite/10 scroll-reveal w-full">
+                        <!-- O Clímax: Formulário de Conversão (A Tensão e a Resolução) -->
+                        <div id="cta" class="pt-8 w-full cycle-step opacity-0">
                             <div class="w-full bg-white rounded-sm shadow-premium p-6 sm:p-12 relative overflow-hidden" id="form-container">
                                 
-                                <div class="text-center mb-10">
-                                    <!-- Insinuação sutil do 1% -->
-                                    <div class="flex items-center justify-center gap-4 mb-6">
-                                        <span class="w-8 h-[1px] bg-accent-terracotta/50"></span>
-                                        <span class="text-[10px] font-bold tracking-[0.2em] text-accent-terracotta uppercase">O 1% Restante</span>
-                                        <span class="w-8 h-[1px] bg-accent-terracotta/50"></span>
+                                <div class="text-center mb-10 relative z-10">
+                                    <!-- Insinuação sutil do 1% (O Incómodo Visual) -->
+                                    <div class="flex items-center justify-center gap-3 mb-6">
+                                        <span class="w-2 h-2 rounded-full bg-accent-bronze animate-pulse"></span>
+                                        <span class="text-[10px] font-bold tracking-[0.2em] text-accent-bronze uppercase font-mono">Aguardando input do Decisor... 1% restante</span>
                                     </div>
 
-                                    <h2 class="font-serif text-2xl sm:text-3xl text-text-graphite leading-[1.2] mb-4 tracking-tight">
-                                        Inicie a Transição Digital do seu Produto.
+                                    <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl text-text-graphite leading-[1.1] mb-5 tracking-tight">
+                                        Complete o 1% final.<br>
+                                        <span class="text-text-matte text-2xl sm:text-3xl font-light italic mt-2 block">Inicie a Transição Digital do seu Produto.</span>
                                     </h2>
-                                    <p class="font-sans text-sm sm:text-base text-text-onyx font-light leading-relaxed max-w-md mx-auto">
-                                        Nossa engenharia desenhou 99% do caminho. Preencha os dados abaixo e tome a decisão que completa o 1% final.
-                                    </p>
                                 </div>
 
-                                <!-- Mensagem de Sucesso -->
+                                <!-- Mensagem de Sucesso (A Recompensa / Alívio Cognitivo) -->
                                 <div id="success-message" class="hidden flex-col items-center justify-center text-center absolute inset-0 bg-white z-20 px-6 sm:px-8">
                                     <div class="w-16 h-16 rounded-full bg-accent-terracotta/10 flex items-center justify-center mb-6">
-                                        <svg class="w-8 h-8 text-accent-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                                        <svg class="w-8 h-8 text-accent-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                     </div>
-                                    <h3 class="font-serif text-2xl text-text-onyx mb-4">Conexão Estabelecida.</h3>
+                                    <h3 class="font-serif text-3xl text-text-onyx mb-4">Conexão Estabelecida.</h3>
                                     <p class="font-sans text-sm sm:text-base text-text-matte font-light leading-relaxed max-w-sm mx-auto">
-                                        Parabéns por fechar o ciclo. A Crivon iniciou a análise da sua marca. Retornaremos no seu e-mail em até 24 horas úteis com o diagnóstico de performance.
+                                        O ciclo fechou. O sistema assumiu o controlo. Retornaremos no seu e-mail em até 24 horas úteis com o diagnóstico de performance.
                                     </p>
                                 </div>
 
-                                <!-- Formulário Minimalista (Focando na Usabilidade sem Teclado Bloqueado) -->
+                                <!-- Formulário Minimalista (A Chave de Ignição) -->
                                 <form id="diagnostico-form" class="space-y-8 relative z-10">
                                     <div class="relative group">
-                                        <label for="nome" class="block text-[10px] font-semibold text-text-matte uppercase tracking-widest mb-1 transition-colors group-focus-within:text-accent-terracotta">Nome do Decisor</label>
+                                        <label for="nome" class="block text-[10px] font-semibold text-text-matte uppercase tracking-widest mb-1 transition-colors group-focus-within:text-accent-terracotta font-mono">Nome do Decisor</label>
                                         <input type="text" id="nome" required placeholder="Seu nome e sobrenome" class="w-full bg-transparent border-b border-text-graphite/20 py-2.5 text-text-onyx placeholder:text-text-graphite/40 focus:outline-none focus:border-accent-terracotta transition-colors font-sans font-light text-base">
                                     </div>
 
                                     <div class="relative group">
-                                        <label for="email" class="block text-[10px] font-semibold text-text-matte uppercase tracking-widest mb-1 transition-colors group-focus-within:text-accent-terracotta">E-mail Corporativo</label>
+                                        <label for="email" class="block text-[10px] font-semibold text-text-matte uppercase tracking-widest mb-1 transition-colors group-focus-within:text-accent-terracotta font-mono">E-mail Corporativo</label>
                                         <input type="email" id="email" required placeholder="ceo@suamarca.com.br" class="w-full bg-transparent border-b border-text-graphite/20 py-2.5 text-text-onyx placeholder:text-text-graphite/40 focus:outline-none focus:border-accent-terracotta transition-colors font-sans font-light text-base">
                                     </div>
 
                                     <div class="relative group">
-                                        <label for="contexto" class="block text-[10px] font-semibold text-text-matte uppercase tracking-widest mb-1 transition-colors group-focus-within:text-accent-terracotta">Sobre o seu Produto ou Marca</label>
+                                        <label for="contexto" class="block text-[10px] font-semibold text-text-matte uppercase tracking-widest mb-1 transition-colors group-focus-within:text-accent-terracotta font-mono">Sobre o seu Produto ou Marca</label>
                                         <textarea id="contexto" required rows="3" placeholder="Fale um pouco sobre o que torna o seu produto único e o seu momento atual..." class="w-full bg-transparent border-b border-text-graphite/20 py-2.5 text-text-onyx placeholder:text-text-graphite/40 focus:outline-none focus:border-accent-terracotta transition-colors font-sans font-light text-base resize-none"></textarea>
                                     </div>
 
@@ -560,7 +643,7 @@
                                         <button type="submit" class="w-full group/btn relative inline-flex items-center justify-center px-8 py-5 text-base font-semibold tracking-wide text-brand-alabaster bg-accent-terracotta overflow-hidden rounded-sm shadow-premium transition-all hover:bg-accent-copper hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent-terracotta focus:ring-offset-2 focus:ring-offset-brand-alabaster">
                                             <span class="relative z-10 flex items-center gap-2">
                                                 Solicitar Diagnóstico Estratégico
-                                                <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                                <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                             </span>
                                         </button>
                                     </div>
@@ -593,17 +676,17 @@
 
                 <div class="lg:col-span-6 grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-12 mt-8 lg:mt-0 w-full">
                     <div>
-                        <h4 class="text-[10px] font-bold tracking-[0.2em] text-accent-terracotta uppercase mb-4">Conexão Estratégica</h4>
+                        <h4 class="text-[10px] font-bold tracking-[0.2em] text-accent-terracotta uppercase mb-4 font-mono">Conexão Estratégica</h4>
                         <ul class="space-y-4 text-sm font-light text-brand-clay/70">
                             <li>
-                                <span class="block text-[10px] text-brand-clay/35 tracking-widest uppercase mb-1">E-mail Corporativo</span>
+                                <span class="block text-[10px] text-brand-clay/35 tracking-widest uppercase mb-1 font-mono">E-mail Corporativo</span>
                                 <a href="mailto:contato@crivon.com.br" class="hover:text-accent-terracotta transition-colors duration-300 flex items-center gap-1 group">
                                     <span>contato@crivon.com.br</span>
                                     <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"></path></svg>
                                 </a>
                             </li>
                             <li>
-                                <span class="block text-[10px] text-brand-clay/35 tracking-widest uppercase mb-1">Linha Direta WhatsApp</span>
+                                <span class="block text-[10px] text-brand-clay/35 tracking-widest uppercase mb-1 font-mono">Linha Direta WhatsApp</span>
                                 <a href="https://wa.me/5511999999999" class="hover:text-accent-terracotta transition-colors duration-300 flex items-center gap-1 group">
                                     <span>+55 (11) 99999-9999</span>
                                     <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"></path></svg>
@@ -613,7 +696,7 @@
                     </div>
 
                     <div>
-                        <h4 class="text-[10px] font-bold tracking-[0.2em] text-brand-clay/40 uppercase mb-4">Operação End-To-End</h4>
+                        <h4 class="text-[10px] font-bold tracking-[0.2em] text-brand-clay/40 uppercase mb-4 font-mono">Operação End-To-End</h4>
                         <p class="text-sm font-light text-brand-clay/50 leading-relaxed">
                             São Paulo • Brasil <br>
                             Atendimento a Varejos de Luxo <br>
@@ -623,7 +706,7 @@
                 </div>
             </div>
 
-            <div class="mt-16 sm:mt-20 pt-8 border-t border-brand-clay/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-medium text-brand-clay/30 tracking-widest uppercase">
+            <div class="mt-16 sm:mt-20 pt-8 border-t border-brand-clay/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-medium text-brand-clay/30 tracking-widest uppercase font-mono">
                 <span class="text-center md:text-left">© 2026 CRIVON. TODOS OS DIREITOS RESERVADOS.</span>
                 <span>Arte e Conversão em Sintonia Perfeita.</span>
             </div>
@@ -635,47 +718,6 @@
             
             gsap.registerPlugin(ScrollTrigger);
 
-            // =========================================================================
-            // MENUS MOBILE
-            // =========================================================================
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileOverlay = document.getElementById('mobile-overlay');
-            const hamburgerIcon = document.getElementById('hamburger-icon');
-            let isMenuOpen = false;
-
-            const toggleMobileMenu = () => {
-                isMenuOpen = !isMenuOpen;
-                if (isMenuOpen) {
-                    gsap.to(mobileOverlay, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
-                    gsap.to(mobileMenu, { x: 0, duration: 0.4, ease: 'power3.out' });
-                    gsap.to(hamburgerIcon, { rotation: 90, duration: 0.3 });
-                    hamburgerIcon.innerHTML = `<path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>`;
-                } else {
-                    gsap.to(mobileOverlay, { opacity: 0, pointerEvents: 'none', duration: 0.3 });
-                    gsap.to(mobileMenu, { x: '100%', duration: 0.4, ease: 'power3.in' });
-                    gsap.to(hamburgerIcon, { rotation: 0, duration: 0.3 });
-                    hamburgerIcon.innerHTML = `<path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>`;
-                }
-            };
-
-            if (mobileMenuBtn) {
-                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-            }
-            if (mobileOverlay) {
-                mobileOverlay.addEventListener('click', toggleMobileMenu);
-            }
-
-            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-            mobileNavLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    if (isMenuOpen) toggleMobileMenu();
-                });
-            });
-
-            // =========================================================================
-            // ANIMAÇÕES E INTERACTORS GSAP
-            // =========================================================================
             const initAnimations = () => {
                 gsap.set(".reveal-element, .reveal-item", { autoAlpha: 0 });
                 gsap.set(".scroll-reveal", { autoAlpha: 0, y: 40 }); 
@@ -700,80 +742,76 @@
                     onEnter: batch => gsap.to(batch, {
                         autoAlpha: 1, y: 0, stagger: 0.15, duration: 1, ease: "power3.out"
                     }),
-                    start: "top 85%",
+                    start: "5% bottom", 
                     once: true
                 });
 
                 // =========================================================================
-                // LÓGICA DE UX DO GRÁFICO 3D (EFEITO ZEIGARNIK E PREENCHIMENTO)
+                // LÓGICA DE UX DO MOTOR DE COMPILAÇÃO (EFEITO ZEIGARNIK E RESOLUÇÃO)
                 // =========================================================================
                 const cycleSteps = gsap.utils.toArray('.cycle-step');
                 const chartFill = document.getElementById('chart-fill');
                 const percentageText = document.getElementById('chart-percentage-text');
                 const stickyGraphicCol = document.getElementById('sticky-graphic-col');
+                const masterChart = document.getElementById('master-chart');
+                const statusBadge = document.getElementById('chart-status-badge');
                 
-                const maxOffset = 157.1; 
+                // Circunferência total do anel SVG
+                const maxOffset = 289.026; 
                 
-                // Os passos começam já com 25% de opacidade de base de leitura confortável (sem ficar invisível)
                 gsap.set(chartFill, { strokeDashoffset: maxOffset });
-                gsap.set(cycleSteps, { opacity: 0.25 });
+                gsap.set(cycleSteps, { opacity: 0, y: 30 }); 
 
-                const fillStages = [0.75, 0.50, 0.25, 0.01];
-                const percentages = ["25%", "50%", "75%", "99%"];
+                // Adicionámos o 5º estágio (CTA Form) que mantém o anel nos 99% mas altera o estado emocional
+                const fillStages = [0.75, 0.50, 0.25, 0.08, 0.08]; 
+                const percentages = ["Compilando... 25%", "Compilando... 50%", "Compilando... 75%", "Compilando... 99%", "Aguardando Decisor: 99%"];
 
                 // Ativação do HUD de progresso no telemóvel
                 ScrollTrigger.create({
                     trigger: "#processo",
                     start: "top 72px", 
                     end: "bottom 90%",
-                    onEnter: () => {
-                        if (window.innerWidth < 1024) {
-                            stickyGraphicCol.classList.add('mobile-hud-active');
-                        }
-                    },
-                    onLeave: () => {
-                        if (window.innerWidth < 1024) {
-                            stickyGraphicCol.classList.remove('mobile-hud-active');
-                        }
-                    },
-                    onEnterBack: () => {
-                        if (window.innerWidth < 1024) {
-                            stickyGraphicCol.classList.add('mobile-hud-active');
-                        }
-                    },
-                    onLeaveBack: () => {
-                        if (window.innerWidth < 1024) {
-                            stickyGraphicCol.classList.remove('mobile-hud-active');
-                        }
-                    }
+                    onEnter: () => { if (window.innerWidth < 1024) stickyGraphicCol.classList.add('mobile-hud-active'); },
+                    onLeave: () => { if (window.innerWidth < 1024) stickyGraphicCol.classList.remove('mobile-hud-active'); },
+                    onEnterBack: () => { if (window.innerWidth < 1024) stickyGraphicCol.classList.add('mobile-hud-active'); },
+                    onLeaveBack: () => { if (window.innerWidth < 1024) stickyGraphicCol.classList.remove('mobile-hud-active'); }
                 });
 
                 window.addEventListener('resize', () => {
-                    if (window.innerWidth >= 1024) {
-                        stickyGraphicCol.classList.remove('mobile-hud-active');
-                    }
+                    if (window.innerWidth >= 1024) stickyGraphicCol.classList.remove('mobile-hud-active');
                 });
 
-                // Transições ativadas precocemente no scroll para máximo conforto de leitura
+                // Lógica de Scroll e Tensão Visual
                 cycleSteps.forEach((step, i) => {
                     ScrollTrigger.create({
                         trigger: step,
-                        start: "top 80%", 
-                        end: "bottom 20%",
+                        start: "top 90%", 
+                        end: "bottom 15%",
                         onToggle: self => {
                             if (self.isActive) {
-                                gsap.to(step, { opacity: 1, duration: 0.4 });
+                                gsap.to(step, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" });
                                 
                                 if (!window.formCompleted) {
                                     gsap.to(chartFill, { 
                                         strokeDashoffset: maxOffset * fillStages[i], 
                                         duration: 0.8, 
-                                        ease: "power2.out" 
+                                        ease: "power3.out" 
                                     });
                                     percentageText.innerText = percentages[i];
+
+                                    // Se for a última secção (CTA Formulário), ativa o estado de tensão (pulsação em bronze)
+                                    if (i === 4) {
+                                        masterChart.classList.add('awaiting-input');
+                                        statusBadge.classList.add('tension-state');
+                                        percentageText.classList.replace('text-accent-terracotta', 'text-accent-bronze');
+                                    } else {
+                                        masterChart.classList.remove('awaiting-input');
+                                        statusBadge.classList.remove('tension-state');
+                                        percentageText.classList.replace('text-accent-bronze', 'text-accent-terracotta');
+                                    }
                                 }
                             } else {
-                                gsap.to(step, { opacity: 0.25, duration: 0.4 });
+                                gsap.to(step, { opacity: 0, y: 20, duration: 0.4, ease: "power2.in" });
                             }
                         }
                     });
@@ -793,6 +831,11 @@
                         e.preventDefault(); 
                         window.formCompleted = true; 
                         
+                        // Remove o estado de tensão e inicia a resolução
+                        masterChart.classList.remove('awaiting-input');
+                        statusBadge.classList.remove('tension-state');
+                        percentageText.classList.replace('text-accent-bronze', 'text-accent-terracotta');
+                        
                         const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
                         
                         tl.to(form, { autoAlpha: 0, y: 20, duration: 0.4 })
@@ -805,16 +848,25 @@
                               { autoAlpha: 0, y: -20 }, 
                               { autoAlpha: 1, y: 0, duration: 0.6 }
                           )
+                          // O Alívio Cognitivo: Fecha os 100% num movimento fluído
                           .to(chartFill, { 
                               strokeDashoffset: 0, 
-                              duration: 1.8, 
-                              ease: "elastic.out(1, 0.75)" 
+                              duration: 1.2, 
+                              ease: "power3.out" 
                           }, "-=0.2")
+                          // Recompensa Visual: Pisca o anel num tom de branco iluminado como confirmação do sistema
+                          .to('.compilation-progress', {
+                              stroke: '#FAF9F6',
+                              filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.8))',
+                              duration: 0.2,
+                              yoyo: true,
+                              repeat: 1
+                          }, "-=0.2")
+                          // Assenta na cor de sucesso e altera o estado do ecrã
                           .call(() => {
-                              percentageText.innerText = "100% Concluído";
+                              percentageText.innerText = "Concluído: 100%";
                               statusBadge.classList.add('completed');
-                              masterChart.classList.add('is-completed');
-                          }, null, "-=1.4");
+                          });
                     });
                 }
             };

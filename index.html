@@ -770,7 +770,7 @@
                 ScrollTrigger.create({
                     trigger: "#processo",
                     start: "top 72px", 
-                    end: "bottom 90%",
+                    end: "bottom top", // Correção: Mantém o HUD fixo até o fim absoluto da secção (evita saltos no scroll)
                     onEnter: () => { if (window.innerWidth < 1024) stickyGraphicCol.classList.add('mobile-hud-active'); },
                     onLeave: () => { if (window.innerWidth < 1024) stickyGraphicCol.classList.remove('mobile-hud-active'); },
                     onEnterBack: () => { if (window.innerWidth < 1024) stickyGraphicCol.classList.add('mobile-hud-active'); },
